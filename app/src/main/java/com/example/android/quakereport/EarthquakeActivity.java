@@ -131,10 +131,19 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> earthquakes) {
+
+        // Hide loading indicator because the data has been loaded
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+
+
+        // Set empty state text to display "No earthquake found"
         mEmptyStateTextView.setText(R.string.no_earthquakes);
 
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
+
+
 
         if (earthquakes != null && !earthquakes.isEmpty()) {
             mAdapter.addAll(earthquakes);
