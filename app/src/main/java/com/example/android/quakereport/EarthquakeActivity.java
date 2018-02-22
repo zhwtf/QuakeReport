@@ -15,7 +15,10 @@
  */
 package com.example.android.quakereport;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -105,6 +108,25 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderCallb
         });
 
 
+        // Get a reference to the Connectivity manager to check state of network connectivity
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // Get details on the currently active default data network
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        // if there is a network connnection, fetch data
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Get a reference to the LoaderManager, in order to interact with loader
+            LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        } else {
+            // First hide loading indicator so error message will be visible
+            View loadingIndicator = findViewById(R.id.loading_indicator);
+            loadingIndicator.setVisibility(View.GONE);
+
+            // Update empty state with no connection error message
+            mEmptyStateTextView.setText(R.string.no_internet_connection);
+        }
 
 
 
